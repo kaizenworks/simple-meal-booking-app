@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+
+  meal-booking-app:
+    container_name: meal-booking-app
+    restart: 'no'
+    build: .
+    networks:
+      - web
+    volumes:
+      - "./:/usr/src/app"
+    ports:
+      - "5000:3000"
+    env_file:
+      - ./.env
+
+  meal-booking-mongo:
+    container_name: meal-booking-mongo
+    image: 'mongo'
+    restart: 'no'
+    networks:
+      - web
+    ports:
+      - "27018:27017"
+
+  # meal-booking-redis:
+  #   container_name: meal-booking-redis
+  #   image: redis:alpine
+  #   networks:
+  #     - web
+  #   restart: 'no'
+  #   expose:
+  #     - 6379
+  #   env_file:
+  #     - .env
+
+networks:
+  web:
+    external:
+      name: ${TRAEFIK_NETWORK}

@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+
+  meal-booking-app:
+    container_name: meal-booking-app
+    restart: 'always'
+    image: "dockerhub-image-name"
+    expose:
+      - "3000"
+    networks:
+      - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.hf-app.priority=100"
+      - "traefik.http.routers.hf-app.rule=Host(`${VIRTUAL_HOST}`)"
+      - "traefik.http.routers.hf-app.entrypoints=websecure"
+      - "traefik.http.routers.hf-app.tls.certresolver=myresolver"
+    env_file:
+      - ./.env
+
+networks:
+  web:
+    external:
+      name: ${TRAEFIK_NETWORK}

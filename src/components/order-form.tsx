@@ -29,6 +29,7 @@ import { Button } from "@/components/ui/button"
 import { IMeal } from '@/models/Meal';
 import { SubmitHandler, useForm } from "react-hook-form";
 import React from "react";
+import { shippingMethods, shippingMethodIds } from "@/lib/shipping";
 
 const orderFormSchema = z.object({
 	name: z.string().min(6, { message: "Full name is required" }),
@@ -42,6 +43,7 @@ const orderFormSchema = z.object({
 	days: z.date().array().refine((days: Date[]) => {
 		return days.length > 0;
 	}, "Please select one or more dates."),
+	shippingMethod: z.enum(shippingMethodIds)
 })
 
 export interface ICheckoutBody {
@@ -195,9 +197,9 @@ export default function OrderForm({ meals, onSubmit, isSubmitting }: OrderFormPr
 											</SelectTrigger>
 										</FormControl>
 										<SelectContent>
-											<SelectItem value="standard">Standard</SelectItem>
-											<SelectItem value="express">Express</SelectItem>
-											<SelectItem value="pikcup">Store Pickup</SelectItem>
+											{ shippingMethods.map((method)=>{
+												return <SelectItem value={method.key} key={method.key}>{method.name}</SelectItem>
+											})}
 										</SelectContent>
 									</Select>
 									<FormDescription>

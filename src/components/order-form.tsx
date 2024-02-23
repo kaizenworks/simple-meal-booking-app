@@ -41,7 +41,7 @@ const orderFormSchema = z.object({
 	mealId: z.string().min(1, { message: "Meal is required" }),
 	days: z.date().array().refine((days: Date[]) => {
 		return days.length > 0;
-	}, "Please select one or more dates.")
+	}, "Please select one or more dates."),
 })
 
 export interface ICheckoutBody {
@@ -59,9 +59,10 @@ export interface ICheckoutBody {
 interface OrderFormProps {
 	meals: IMeal[]
 	onSubmit: SubmitHandler<ICheckoutBody>
+	isSubmitting: boolean
 }
 
-export default function OrderForm({ meals, onSubmit }: OrderFormProps) {
+export default function OrderForm({ meals, onSubmit, isSubmitting }: OrderFormProps) {
 
 	const form = useForm<ICheckoutBody>({
 		defaultValues: {
@@ -78,9 +79,6 @@ export default function OrderForm({ meals, onSubmit }: OrderFormProps) {
 		mode: 'onBlur',
 		resolver: zodResolver(orderFormSchema),
 	});
-
-	const initialDays: Date[] = [];
-	const [days, setDays] = useState<Date[] | undefined>(initialDays);
 
 	return (
 		<Form {...form}>
@@ -227,7 +225,7 @@ export default function OrderForm({ meals, onSubmit }: OrderFormProps) {
 								</FormItem>
 							)}
 						/>
-						<Button className="w-full" type="submit">Place Order</Button>
+						<Button disabled={isSubmitting} className="w-full" type="submit">Place Order</Button>
 					</div>
 				</div>
 

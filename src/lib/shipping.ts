@@ -5,3 +5,11 @@ export const shippingMethods = [
 ] as const;
 
 export const shippingMethodIds = ['standard','express','pickup'] as const;
+
+export function getShippingCharge(shippingMethod:string): number {
+  let method = shippingMethods.find((e)=>e.key==shippingMethod);
+  
+  if(!method) throw new Error(`Shipping method not found`);
+  
+  return method.charge;
+} 

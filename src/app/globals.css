@@ -74,3 +74,10 @@
     @apply bg-background text-foreground;
   }
 }
+
+.navbar {
+  @apply shadow-lg bg-orange-600 text-white;
+}
+.navbar a {
+  @apply text-white;
+}

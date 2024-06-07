@@ -3,6 +3,7 @@
 import { useQuery } from '@tanstack/react-query'
 import OrderForm, { ICheckoutBody } from '@/components/order-form';
 import { useState } from 'react';
+import Navbar from '@/components/navbar';
 
 
 export default function Home() {
@@ -22,7 +23,7 @@ export default function Home() {
     try {
       setIsSubmitting(true);
       const response = await fetch('/api/checkout', {
-        method: 'POST', 
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -35,7 +36,7 @@ export default function Home() {
       } else {
         alert(json.message);
       }
-      
+
     } catch (error) {
       console.error(error);
     }
@@ -45,6 +46,13 @@ export default function Home() {
 
 
   return (
-    <OrderForm meals={data?.data ?? []} onSubmit={handleSubmit} isSubmitting={isSubmitting} />
+    <>
+      <Navbar />
+      <div className="container py-5 mx-auto">
+        <OrderForm meals={data?.data ?? []} onSubmit={handleSubmit} isSubmitting={isSubmitting} />
+      </div>
+    </>
+
+
   );
 }

@@ -9,7 +9,7 @@ export default function NavbarAdmin() {
 				<Link href="/admin" className="text-lg font-bold">Meal Booking App</Link>
 				<div className="flex gap-4 me-auto">
 					<Link href="/admin">Orders</Link>
-					<Link href="#">Meals</Link>
+					<Link href="/admin/meals">Meals</Link>
 					<Link href="#">Shipping Methods</Link>
 					<Link href="#">Users</Link>
 				</div>

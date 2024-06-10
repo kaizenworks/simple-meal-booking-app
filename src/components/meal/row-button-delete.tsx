@@ -21,7 +21,7 @@ export function DeleteMealButton({ id, name }: { id: string, name: string }) {
 				<DialogHeader>
 					<DialogTitle>Delete Meal - {name} ?</DialogTitle>
 					<DialogDescription>
-						Do you want to delete meal "{name}"? This will permanently delete the meal and cannot be undone.
+						Do you want to delete meal &quot;{name}&quot;? This will permanently delete the meal and cannot be undone.
 					</DialogDescription>
 				</DialogHeader>
 				<DialogFooter>

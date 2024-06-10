@@ -8,8 +8,10 @@ import { DeleteShippingButton } from "./delete-shipping-button.client";
 import ShippingMethod from "@/models/ShippingMethod";
 import db from "@/lib/db";
 import { AddShippingButton } from "./add-shipping-button";
+import { unstable_noStore } from "next/cache";
 
 async function getShippingMethod() {
+	unstable_noStore();
 	await db.connect();
 	let docs = await ShippingMethod.find({})
 	return docs.map(doc=>doc.toJSON())

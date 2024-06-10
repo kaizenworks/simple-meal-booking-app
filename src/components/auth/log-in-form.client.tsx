@@ -30,7 +30,7 @@ export const LogInForm = () => {
 		resolver: zodResolver(logInSchema),
 		defaultValues: {
 			email: "meal@kaizenworks.dev",
-			password: "nissa1",
+			password: "",
 		},
 	})
 

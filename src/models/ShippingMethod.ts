@@ -17,14 +17,14 @@ const ShippingMethodSchema = new mongoose.Schema<IShippingMethod>({
 
 ShippingMethodSchema.set('toJSON', {
   transform: function (doc, ret, options) {
-      ret.id = ret._id;
+      ret.id = ret._id.toString();
       delete ret._id;
       delete ret.__v;
   }
 }); 
 
 
-const ShippingMethod = mongoose.models.ShippingMethod || mongoose.model<IShippingMethod>('ShippingMethod', ShippingMethodSchema);
+const ShippingMethod = mongoose.models?.ShippingMethod || mongoose.model<IShippingMethod>('ShippingMethod', ShippingMethodSchema);
 
 export default ShippingMethod;
 

@@ -8,19 +8,24 @@ export interface IOrder {
   phone: string;
   email: string;
   address: string;
-  shippingMethod: string;
-  days: Date[];
   note: string;
-  mealId: ObjectId;
+  quantity: number;
+  mealId?: ObjectId | string;
   mealName: string;
   mealPrice: number;
-  quantity: number;
+  shippingId?: ObjectId | string;
+  shippingMethod: string;
+  shippingRate: number;
+  days: Date[];
   cartTotal: number;
-  shipping: number;
+  shippingCharge: number;
   total: number;
   status: string;
+  trackingId: string;
   createdAt: Date;
   updatedAt: Date;
+
+  toJSON: Function;
 }
 
 const OrderSchema = new mongoose.Schema<IOrder>({
@@ -29,20 +34,30 @@ const OrderSchema = new mongoose.Schema<IOrder>({
   phone: { type: String, required: true },
   email: { type: String, required: true },
   address: { type: String, required: true },
-  shippingMethod: { type: String, required: true },
-  days: [Date],
   note: String,
-  mealId: { type: mongoose.Schema.Types.ObjectId, required: true },
+  quantity: { type: Number, required: true },
+  mealId: { type: mongoose.Schema.Types.ObjectId },
   mealName: { type: String, required: true },
   mealPrice: { type: Number, required: true },
-  quantity: { type: Number, required: true },
+  shippingId: { type: mongoose.Schema.Types.ObjectId },
+  shippingMethod: { type: String, required: true },
+  shippingRate: { type: Number, required: true },
+  days: [Date],
   cartTotal: { type: Number, required: true },
-  shipping: { type: Number, required: true },
+  shippingCharge: { type: Number, required: true },
   total: { type: Number, required: true },
   status: { type: String, default: "pending" },
 },{ timestamps: true });
 
-const Order = mongoose.models.Order || mongoose.model<IOrder>('Order', OrderSchema);
+OrderSchema.set('toJSON', {
+  transform: function (doc, ret, options) {
+      ret.id = ret._id.toString();
+      delete ret._id;
+      delete ret.__v;
+  }
+}); 
+
+const Order = mongoose.models?.Order || mongoose.model<IOrder>('Order', OrderSchema);
 
 export default Order;
 

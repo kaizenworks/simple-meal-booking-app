@@ -15,13 +15,13 @@ export interface IUser {
 const UserSchema = new mongoose.Schema<IUser>({
   name: { type: String, required: true },
   email: { type: String, required: true },
-  role: { type: Number, default: 'user' },
+  role: { type: String, default: 'user' },
   password: { type: String, required: true }
 },{ timestamps: true });
 
 UserSchema.set('toJSON', {
   transform: function (doc, ret, options) {
-      ret.id = ret._id;
+      ret.id = ret._id.toString();
       delete ret._id;
       delete ret.__v;
   }

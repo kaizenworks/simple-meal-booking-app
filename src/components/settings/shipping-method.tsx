@@ -1,14 +1,10 @@
 import { Card, CardTitle, CardContent, } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { EllipsisVertical } from "lucide-react";
-import { Button } from "../ui/button";
-import { EditShippingButton } from "./edit-shipping-button.client";
-import { DeleteShippingButton } from "./delete-shipping-button.client";
 import ShippingMethod from "@/models/ShippingMethod";
 import db from "@/lib/db";
 import { AddShippingButton } from "./add-shipping-button";
 import { unstable_noStore } from "next/cache";
+import ShippingMethodRowAction from "./shipping-method-row-action.client";
 
 export async function getShippingMethod() {
 	unstable_noStore();
@@ -47,19 +43,7 @@ export default async function ShippingMethodCard() {
 									<TableCell>{method.name}</TableCell>
 									<TableCell>{method.charge}</TableCell>
 									<TableCell style={{ textAlign: 'right' }}>
-										<DropdownMenu>
-											<DropdownMenuTrigger asChild>
-												<Button variant="outline" size="icon">
-													<EllipsisVertical className="h-4 w-4" />
-												</Button>
-											</DropdownMenuTrigger>
-											<DropdownMenuContent>
-
-												<EditShippingButton method={method} />
-
-												<DeleteShippingButton id={method.id} name={method.name} />
-											</DropdownMenuContent>
-										</DropdownMenu>
+										<ShippingMethodRowAction method={method} />
 									</TableCell>
 								</TableRow>
 							))

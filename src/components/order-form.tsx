@@ -1,6 +1,6 @@
-import { useState } from "react";
+"use client"
+import { useEffect, useState } from "react";
 
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
@@ -27,31 +27,23 @@ import { Button } from "@/components/ui/button"
 
 
 import { IMeal } from '@/models/Meal';
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import React from "react";
-import { shippingMethods, shippingMethodIds } from "@/lib/shipping";
+import { IShippingMethod } from "@/models/ShippingMethod";
+import { Table, TableBody, TableCell, TableRow } from "./ui/table";
+import { checkoutAction } from "@/app/actions";
+import { z } from "zod";
+import { checkoutSchema } from "@/lib/zod/checkout";
+import { IOrder } from "@/models/Order";
 
-const orderFormSchema = z.object({
-	name: z.string().min(6, { message: "Full name is required" }),
-	phone: z.string().min(10, { message: "Phone is required" }),
-	email: z.string()
-		.min(1, { message: "Email is required" })
-		.email({ message: "Email is not valid" }),
-	address: z.string().min(6, { message: "Address is required" }),
-	quantity: z.number().min(1, "Quanity must be at least 1"),
-	mealId: z.string().min(1, { message: "Meal is required" }),
-	days: z.date().array().refine((days: Date[]) => {
-		return days.length > 0;
-	}, "Please select one or more dates."),
-	shippingMethod: z.enum(shippingMethodIds)
-})
+
 
 export interface ICheckoutBody {
 	name: string;
 	phone: string;
 	email: string;
 	address: string;
-	shippingMethod: string;
+	shippingId: string;
 	days: Date[];
 	note: string;
 	mealId: string;
@@ -59,32 +51,41 @@ export interface ICheckoutBody {
 }
 
 interface OrderFormProps {
-	meals: IMeal[]
-	onSubmit: SubmitHandler<ICheckoutBody>
-	isSubmitting: boolean
+	meals: IMeal[];
+	shippingMethods: IShippingMethod[];
 }
 
-export default function OrderForm({ meals, onSubmit, isSubmitting }: OrderFormProps) {
+export default function OrderForm({ meals, shippingMethods }: OrderFormProps) {
 
-	const form = useForm<ICheckoutBody>({
+	const [order, setOrder] = useState<IOrder | undefined>();
+
+	const form = useForm<z.infer<typeof checkoutSchema>>({
 		defaultValues: {
-			name: '',
-			phone: '',
-			email: '',
-			address: '',
-			shippingMethod: 'standard',
+			name: 'Rafaat',
+			phone: '+8801867076297',
+			email: 'rafaat.ahmed@gmail.com',
+			address: 'Test Address',
+			shippingId: '',
 			days: [],
-			note: '',
+			note: 'Some Note',
 			mealId: '',
 			quantity: 1
 		},
 		mode: 'onBlur',
-		resolver: zodResolver(orderFormSchema),
+		resolver: zodResolver(checkoutSchema),
 	});
+
+	const save = (value: z.infer<typeof checkoutSchema>) => {
+		checkoutAction(value).then((order: IOrder) => {
+			setOrder(order);
+		});
+	}
+
+	if (order) return ThankYou(order);
 
 	return (
 		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+			<form onSubmit={form.handleSubmit(save)} className="space-y-8">
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 					<div className="p-4">
 						<h4 className="mb-4 text-xl font-bold">Billing Information</h4>
@@ -177,16 +178,13 @@ export default function OrderForm({ meals, onSubmit, isSubmitting }: OrderFormPr
 											}
 										</SelectContent>
 									</Select>
-									<FormDescription>
-										Standard meal = 100. Premium meal = 500.
-									</FormDescription>
 									<FormMessage />
 								</FormItem>
 							)}
 						/>
 						<FormField
 							control={form.control}
-							name="shippingMethod"
+							name="shippingId"
 							render={({ field }) => (
 								<FormItem className="mb-3">
 									<FormLabel>Shipping Method</FormLabel>
@@ -197,14 +195,11 @@ export default function OrderForm({ meals, onSubmit, isSubmitting }: OrderFormPr
 											</SelectTrigger>
 										</FormControl>
 										<SelectContent>
-											{ shippingMethods.map((method)=>{
-												return <SelectItem value={method.key} key={method.key}>{method.name}</SelectItem>
+											{shippingMethods.map((method) => {
+												return <SelectItem value={method.id} key={method.id}>{method.name}</SelectItem>
 											})}
 										</SelectContent>
 									</Select>
-									<FormDescription>
-										Express shipping takes upto 1 hour. Standard shipping takes 4-5 hours.
-									</FormDescription>
 									<FormMessage />
 								</FormItem>
 							)}
@@ -227,7 +222,9 @@ export default function OrderForm({ meals, onSubmit, isSubmitting }: OrderFormPr
 								</FormItem>
 							)}
 						/>
-						<Button disabled={isSubmitting} className="w-full" type="submit">Place Order</Button>
+						<h4 className="mb-4 text-xl font-bold">Order Summary</h4>
+						<TotalValue meals={meals} shippingMethods={shippingMethods} />
+						<Button className="w-full" type="submit">Place Order</Button>
 					</div>
 				</div>
 
@@ -235,4 +232,77 @@ export default function OrderForm({ meals, onSubmit, isSubmitting }: OrderFormPr
 			</form>
 		</Form>
 	)
+}
+
+function ThankYou(order: IOrder) {
+	return (
+		<div className="w-full md:w-1/3 mx-auto space-y-8">
+			<h2 className="text-3xl">Thank you {order.name}</h2>
+			<Table>
+				<TableBody>
+					<TableRow>
+						<TableCell>Invoice ID</TableCell>
+						<TableCell style={{ textAlign: 'right' }}>{order.invoiceId.toUpperCase()}</TableCell>
+					</TableRow>
+					<TableRow>
+						<TableCell>Meal: {`${order.mealName} (${order.mealPrice} x ${order.days.length} days)`}</TableCell>
+						<TableCell style={{ textAlign: 'right' }}>{order.cartTotal}</TableCell>
+					</TableRow>
+					<TableRow>
+						<TableCell>Shipping: {`${order.shippingMethod} (${order.shippingRate} x ${order.days.length} days)`}</TableCell>
+						<TableCell style={{ textAlign: 'right' }}>{order.shippingCharge}</TableCell>
+					</TableRow>
+					<TableRow>
+						<TableCell>Total</TableCell>
+						<TableCell style={{ textAlign: 'right' }}>{order.total}</TableCell>
+					</TableRow>
+				</TableBody>
+			</Table>
+		</div>
+	)
+}
+
+function TotalValue({ meals, shippingMethods }: Partial<OrderFormProps>) {
+
+	const valChanges = useWatch();
+
+	const [total, setTotal] = useState({
+		price: 0,
+		shipping: 0,
+		days: 0
+	});
+
+	useEffect(() => {
+		const { mealId, shippingId, days } = valChanges;
+
+		const meal = meals?.find(m => m.id == mealId);
+		const method = shippingMethods?.find(m => m.id == shippingId);
+
+		setTotal({
+			price: (meal?.price ?? 0),
+			shipping: (method?.charge ?? 0),
+			days: days.length
+		})
+
+	}, [valChanges])
+
+	return (
+		<Table>
+			<TableBody>
+				<TableRow>
+					<TableCell>Cart Total ({total.price} x {total.days} days)</TableCell>
+					<TableCell style={{ textAlign: 'right' }}>{total.price * total.days}</TableCell>
+				</TableRow>
+				<TableRow>
+					<TableCell>Shipping ({total.shipping} x {total.days} days)</TableCell>
+					<TableCell style={{ textAlign: 'right' }}>{total.shipping * total.days}</TableCell>
+				</TableRow>
+				<TableRow>
+					<TableCell>Total</TableCell>
+					<TableCell style={{ textAlign: 'right' }}>{(total.price + total.shipping) * total.days}</TableCell>
+				</TableRow>
+			</TableBody>
+		</Table>
+	)
+
 }

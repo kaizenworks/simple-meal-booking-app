@@ -10,7 +10,7 @@ import db from "@/lib/db";
 import { AddShippingButton } from "./add-shipping-button";
 import { unstable_noStore } from "next/cache";
 
-async function getShippingMethod() {
+export async function getShippingMethod() {
 	unstable_noStore();
 	await db.connect();
 	let docs = await ShippingMethod.find({})

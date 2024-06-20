@@ -229,6 +229,11 @@ export default function OrderForm({ meals, shippingMethods }: OrderFormProps) {
 											min={1}
 											selected={field.value}
 											onSelect={(date) => field.onChange(date)}
+											disabled={[
+												{ before: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000) },
+												{ after: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) },
+												{ dayOfWeek: [0, 6] }
+											]}
 										/>
 									</FormControl>
 									<FormMessage />
@@ -312,7 +317,7 @@ function TotalValue({ meals, shippingMethods }: Partial<OrderFormProps>) {
 				</TableRow>
 				<TableRow>
 					<TableCell>Total</TableCell>
-					<TableCell style={{ textAlign: 'right' }}>{( (total.price*valChanges.quantity) + total.shipping) * total.days}</TableCell>
+					<TableCell style={{ textAlign: 'right' }}>{((total.price * valChanges.quantity) + total.shipping) * total.days}</TableCell>
 				</TableRow>
 			</TableBody>
 		</Table>

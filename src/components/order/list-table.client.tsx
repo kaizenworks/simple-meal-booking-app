@@ -15,17 +15,17 @@ export interface iOrderListPageQuery {
 	query: string | null,
 	status: string | null,
 	mealId: string | null,
-	shipping: string | null,
+	shippingId: string | null,
 }
 
 export default function OrderListTable() {
 
 	const params = useSearchParams();
 	const [pageQuery, setPageQuery] = useState<iOrderListPageQuery>({
-		query: null,
-		status: null,
-		mealId: null,
-		shipping: null
+		query: '',
+		status: '',
+		mealId: '',
+		shippingId: ''
 	})
 
 	useEffect(() => {
@@ -33,7 +33,7 @@ export default function OrderListTable() {
 		query: params.get('query'),
 		status: params.get('status'),
 		mealId: params.get('mealId'),
-		shipping: params.get('shipping')
+		shippingId: params.get('shippingId')
 		})
 	}, [params])
 

@@ -1,15 +1,14 @@
 "use client"
-import { IShippingMethod } from "@/models/ShippingMethod";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { DialogHeader, Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { DialogHeader, Dialog, DialogContent, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Ellipsis } from "lucide-react";
 import { useState } from "react";
-import { deleteShippingAction } from "@/app/admin/settings/delete-shipping.action";
 import { IOrder } from "@/models/Order";
 import { deleteOrderAction } from "@/app/admin/delete-order.action";
 import { useQueryClient } from "@tanstack/react-query";
 import OrderStatusEditForm from "./change-order-status-form";
+import { useRouter } from "next/navigation";
 
 interface OrderAdminRowActionProps {
 	order: IOrder;
@@ -18,8 +17,10 @@ interface OrderAdminRowActionProps {
 export default function OrderAdminRowAction({ order }: OrderAdminRowActionProps) {
 
 	const queryClient = useQueryClient();
+	const router = useRouter();
 
 	const [openEditStatus, setOpenEditStatus] = useState(false);
+	const [openEdit, setOpenEdit] = useState(false);
 	const [openDelete, setOpenDelete] = useState(false);
 
 	return (
@@ -32,6 +33,7 @@ export default function OrderAdminRowAction({ order }: OrderAdminRowActionProps)
 				</DropdownMenuTrigger>
 				<DropdownMenuContent>
 					<DropdownMenuItem onClick={() => setOpenEditStatus(true)}>Change Status</DropdownMenuItem>
+					<DropdownMenuItem onClick={() => router.push(`/admin/orders/${order.invoiceId}`) }>Edit</DropdownMenuItem>
 					<DropdownMenuItem onClick={() => setOpenDelete(true)}>Delete</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>

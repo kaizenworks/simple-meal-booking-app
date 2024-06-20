@@ -10,10 +10,10 @@ export interface IOrder {
   address: string;
   note: string;
   quantity: number;
-  mealId?: ObjectId | string;
+  mealId?: string;
   mealName: string;
   mealPrice: number;
-  shippingId?: ObjectId | string;
+  shippingId?: string;
   shippingMethod: string;
   shippingRate: number;
   days: Date[];
@@ -52,6 +52,8 @@ const OrderSchema = new mongoose.Schema<IOrder>({
 OrderSchema.set('toJSON', {
   transform: function (doc, ret, options) {
       ret.id = ret._id.toString();
+      ret.mealId = ret.mealId.toString();
+      ret.shippingId = ret.shippingId.toString();
       delete ret._id;
       delete ret.__v;
   }

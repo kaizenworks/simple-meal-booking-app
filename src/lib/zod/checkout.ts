@@ -10,7 +10,7 @@ export const checkoutSchema = z.object({
 	note: z.string().optional(),
 	mealId: z.string().min(1, { message: "Meal is required" }),
 	shippingId: z.string().min(1, { message: "Meal is required" }),
-	quantity: z.number().min(1, "Quanity must be at least 1"),
+	quantity: z.coerce.number().min(1, "Quanity must be at least 1"),
 	days: z.date().array().refine((days: Date[]) => {
 		return days.length > 0;
 	}, "Please select one or more dates."),

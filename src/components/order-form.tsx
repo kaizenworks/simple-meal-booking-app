@@ -184,6 +184,19 @@ export default function OrderForm({ meals, shippingMethods }: OrderFormProps) {
 						/>
 						<FormField
 							control={form.control}
+							name="quantity"
+							render={({ field }) => (
+								<FormItem className="mb-3">
+									<FormLabel>Quantity</FormLabel>
+									<FormControl>
+										<Input type="number" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
 							name="shippingId"
 							render={({ field }) => (
 								<FormItem className="mb-3">
@@ -245,7 +258,7 @@ function ThankYou(order: IOrder) {
 						<TableCell style={{ textAlign: 'right' }}>{order.invoiceId.toUpperCase()}</TableCell>
 					</TableRow>
 					<TableRow>
-						<TableCell>Meal: {`${order.mealName} (${order.mealPrice} x ${order.days.length} days)`}</TableCell>
+						<TableCell>Meal: {`${order.mealName} (${order.mealPrice} x ${order.quantity} pcs x ${order.days.length} days)`}</TableCell>
 						<TableCell style={{ textAlign: 'right' }}>{order.cartTotal}</TableCell>
 					</TableRow>
 					<TableRow>
@@ -290,8 +303,8 @@ function TotalValue({ meals, shippingMethods }: Partial<OrderFormProps>) {
 		<Table>
 			<TableBody>
 				<TableRow>
-					<TableCell>Cart Total ({total.price} x {total.days} days)</TableCell>
-					<TableCell style={{ textAlign: 'right' }}>{total.price * total.days}</TableCell>
+					<TableCell>Cart Total ({total.price} x {valChanges.quantity} pcs x {total.days} days)</TableCell>
+					<TableCell style={{ textAlign: 'right' }}>{total.price * valChanges.quantity * total.days}</TableCell>
 				</TableRow>
 				<TableRow>
 					<TableCell>Shipping ({total.shipping} x {total.days} days)</TableCell>
@@ -299,7 +312,7 @@ function TotalValue({ meals, shippingMethods }: Partial<OrderFormProps>) {
 				</TableRow>
 				<TableRow>
 					<TableCell>Total</TableCell>
-					<TableCell style={{ textAlign: 'right' }}>{(total.price + total.shipping) * total.days}</TableCell>
+					<TableCell style={{ textAlign: 'right' }}>{( (total.price*valChanges.quantity) + total.shipping) * total.days}</TableCell>
 				</TableRow>
 			</TableBody>
 		</Table>

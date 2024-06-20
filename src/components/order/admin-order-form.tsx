@@ -190,6 +190,19 @@ export default function AdminOrderForm({ meals, shippingMethods, order }: AdminO
 						/>
 						<FormField
 							control={form.control}
+							name="quantity"
+							render={({ field }) => (
+								<FormItem className="mb-3">
+									<FormLabel>Quantity</FormLabel>
+									<FormControl>
+										<Input type="number" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
 							name="shippingId"
 							render={({ field }) => (
 								<FormItem className="mb-3">
@@ -270,8 +283,8 @@ function TotalValue({ meals, shippingMethods }: Partial<AdminOrderFormProps>) {
 		<Table>
 			<TableBody>
 				<TableRow>
-					<TableCell>Cart Total ({total.price} x {total.days} days)</TableCell>
-					<TableCell style={{ textAlign: 'right' }}>{total.price * total.days}</TableCell>
+					<TableCell>Cart Total ({total.price} x {valChanges.quantity} pcs x {total.days} days)</TableCell>
+					<TableCell style={{ textAlign: 'right' }}>{total.price * valChanges.quantity * total.days}</TableCell>
 				</TableRow>
 				<TableRow>
 					<TableCell>Shipping ({total.shipping} x {total.days} days)</TableCell>
@@ -279,7 +292,7 @@ function TotalValue({ meals, shippingMethods }: Partial<AdminOrderFormProps>) {
 				</TableRow>
 				<TableRow>
 					<TableCell>Total</TableCell>
-					<TableCell style={{ textAlign: 'right' }}>{(total.price + total.shipping) * total.days}</TableCell>
+					<TableCell style={{ textAlign: 'right' }}>{( (total.price*valChanges.quantity) + total.shipping) * total.days}</TableCell>
 				</TableRow>
 			</TableBody>
 		</Table>

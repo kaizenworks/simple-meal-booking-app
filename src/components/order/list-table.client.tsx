@@ -30,21 +30,19 @@ export default function OrderListTable() {
 
 	useEffect(() => {
 		setPageQuery({
-		query: params.get('query'),
-		status: params.get('status'),
-		mealId: params.get('mealId'),
-		shippingId: params.get('shippingId')
+			query: params.get('query'),
+			status: params.get('status'),
+			mealId: params.get('mealId'),
+			shippingId: params.get('shippingId')
 		})
 	}, [params])
 
-	const { data } = useQuery({ queryKey: ['orders', pageQuery], queryFn: () => getOrders(pageQuery) })
+	const { data, isPending } = useQuery({ queryKey: ['orders', pageQuery], queryFn: () => getOrders(pageQuery) })
 
+	if (isPending) return <EmptyTable message="Loading orders." />
 	return (
 		<>
-			{data
-				? (<DataTable columns={columns} data={data.data as IOrder[]} />)
-				: <EmptyTable message="No order found." />
-			}
+			{data && (<DataTable columns={columns} data={data.data as IOrder[]} />)}
 		</>
 	);
 }

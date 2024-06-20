@@ -29,10 +29,12 @@ export const columns: ColumnDef<IMeal>[] = [
   },
   {
     accessorKey: "actions",
-    header: "Actions",
+    header: () => <div className="text-right">Actions</div>,
     cell: ({ row }) => {
       return (
-        <DeleteMealButton id={row.original.id} name={row.original.name} />
+        <div className="text-right">
+          <DeleteMealButton id={row.original.id} name={row.original.name} />
+        </div>
       )
     }
   }

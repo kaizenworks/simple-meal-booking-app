@@ -22,18 +22,17 @@ export default function MealListTable() {
 
 	useEffect(() => {
 		setPageQuery({
-		query: params.get('query')
+			query: params.get('query')
 		})
 	}, [params])
 
-	const { data } = useQuery({ queryKey: ['meals', pageQuery], queryFn: () => getMeals(pageQuery) })
+	const { data, isPending } = useQuery({ queryKey: ['meals', pageQuery], queryFn: () => getMeals(pageQuery) })
+
+	if (isPending) return <EmptyTable message="Loading meals." />
 
 	return (
 		<>
-			{data
-				? (<DataTable columns={columns} data={data.data as IMeal[]} />)
-				: <EmptyTable message="No meals found." />
-			}
+			{data && <DataTable columns={columns} data={data.data as IMeal[]} />}
 		</>
 	);
 }

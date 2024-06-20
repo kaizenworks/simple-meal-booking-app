@@ -20,7 +20,7 @@ export default function SelectStatus({ field }: iSelectStatus) {
 				<SelectItem value="pending">Pending</SelectItem>
 				<SelectItem value="processing">Processing</SelectItem>
 				<SelectItem value="completed">Completed</SelectItem>
-				<SelectItem value="canclled">Cancelled</SelectItem>
+				<SelectItem value="cancelled">Cancelled</SelectItem>
 			</SelectContent>
 		</Select>
 	)

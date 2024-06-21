@@ -11,8 +11,8 @@ export const dynamic = 'force-dynamic';
 export const GET = auth(async function GET(request: NextAuthRequest) {
 
   if (!request.auth) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
-
-  if (request.auth.role != ROLES[0]) return NextResponse.json({ message: "Not allowed" }, { status: 403 })
+  
+  if (request.auth.user.role != ROLES[0]) return NextResponse.json({ message: "Not allowed" }, { status: 403 })
 
   await db.connect();
 

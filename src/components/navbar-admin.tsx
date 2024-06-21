@@ -1,7 +1,12 @@
+import { auth } from "@/auth";
+import { ROLES } from "@/config";
+import { getSession } from "next-auth/react"
 import Link from "next/link"
 import { LogOutButton } from "./auth/log-out-button.client"
 
-export default function NavbarAdmin() {
+export default async function NavbarAdmin() {
+
+	const session = await auth();
 
 	return (
 		<nav className="navbar bg-blue">
@@ -10,7 +15,7 @@ export default function NavbarAdmin() {
 				<div className="flex gap-4 me-auto">
 					<Link href="/admin">Orders</Link>
 					<Link href="/admin/meals">Meals</Link>
-					<Link href="/admin/users">Users</Link>
+					{ session?.user?.role == ROLES[0] && <Link href="/admin/users">Users</Link> }
 					<Link href="/admin/settings">Settings</Link>
 				</div>
 				<div className="flex gap-4">

@@ -1,11 +1,16 @@
+import { auth } from "@/auth";
 import db from "@/lib/db";
 import { escapeRegex } from "@/lib/escape-regex";
 import Order, { IOrder } from "@/models/Order";
-import { NextRequest, NextResponse } from "next/server";
+import { NextAuthRequest } from "next-auth/lib";
+import { NextResponse } from "next/server";
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(request: NextRequest) {
+export const GET = auth(async function GET(request: NextAuthRequest) {
+  
+  if(!request.auth) return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
+  
   await db.connect();
 
   const searchParams = request.nextUrl.searchParams
@@ -32,4 +37,4 @@ export async function GET(request: NextRequest) {
   orders = orders.map((order: IOrder) => { return order.toJSON() })
 
   return NextResponse.json({ data: orders })
-}
+})

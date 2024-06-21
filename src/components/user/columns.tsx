@@ -3,6 +3,7 @@
 import { IUser } from "@/models/User";
 import { ColumnDef } from "@tanstack/react-table"
 import Link from "next/link";
+import UserAdminRowAction from "./user-admin-row-action.client";
 
 export const columns: ColumnDef<IUser>[] = [
   {
@@ -30,6 +31,17 @@ export const columns: ColumnDef<IUser>[] = [
       let date = new Date(row.original.createdAt);
 
       return <span suppressHydrationWarning>{date.toDateString() ?? 'na'}</span>
+    }
+  },
+  {
+    accessorKey: "actions",
+    header: () => <div className="text-right">Actions</div>,
+    cell: ({row}) => {
+     return (
+      <div className="text-right">
+        <UserAdminRowAction user={row.original} /> 
+      </div>
+     )
     }
   }
 ]

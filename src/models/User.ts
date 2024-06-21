@@ -1,5 +1,3 @@
-import { ROLES } from '@/config';
-import { hashPassword } from '@/lib/auth';
 import mongoose from 'mongoose';
 
 export interface IUser {
@@ -28,15 +26,6 @@ UserSchema.set('toJSON', {
       delete ret.__v;
   }
 }); 
-
-UserSchema.pre('save', function(next) {
-  // check if password is present and is modified.
-  if ( this.password && this.isModified('password') ) {
-      this.password = hashPassword(this.password);
-  }
-  next();
-});
-
 
 const User = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
 

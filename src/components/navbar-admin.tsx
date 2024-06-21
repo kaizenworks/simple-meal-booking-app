@@ -10,7 +10,7 @@ export default function NavbarAdmin() {
 				<div className="flex gap-4 me-auto">
 					<Link href="/admin">Orders</Link>
 					<Link href="/admin/meals">Meals</Link>
-					<Link href="#">Users</Link>
+					<Link href="/admin/users">Users</Link>
 					<Link href="/admin/settings">Settings</Link>
 				</div>
 				<div className="flex gap-4">

@@ -1,10 +1,12 @@
+import { ROLES } from '@/config';
+import { hashPassword } from '@/lib/auth';
 import mongoose from 'mongoose';
 
 export interface IUser {
   id: string;
   name: string;
   email: string;
-  role: string;
+  role: 'admin' | 'staff' | 'user'; //TODO: Improve conversion
   password: string;
   createdAt: Date,
   updatedAt: Date
@@ -15,7 +17,7 @@ export interface IUser {
 const UserSchema = new mongoose.Schema<IUser>({
   name: { type: String, required: true },
   email: { type: String, required: true },
-  role: { type: String, default: 'user' },
+  role: { type: String, default: 'user', required: true },
   password: { type: String, required: true }
 },{ timestamps: true });
 
@@ -26,6 +28,14 @@ UserSchema.set('toJSON', {
       delete ret.__v;
   }
 }); 
+
+UserSchema.pre('save', function(next) {
+  // check if password is present and is modified.
+  if ( this.password && this.isModified('password') ) {
+      this.password = hashPassword(this.password);
+  }
+  next();
+});
 
 
 const User = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);

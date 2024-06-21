@@ -5,8 +5,7 @@ import { Metadata } from 'next'
 import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
-	title: "Edit User | Simple User Ordering App",
-	description: "Simple User Ordering App Demo by Kaizenworks",
+	title: "Edit User",
 };
 
 async function getUser(id:string): Promise<IUser | null> {

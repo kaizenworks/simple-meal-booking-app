@@ -4,6 +4,7 @@ import { getShippingMethod } from '@/components/settings/shipping-method';
 import { Card, CardContent } from '@/components/ui/card'
 import db from '@/lib/db';
 import Meal from '@/models/Meal';
+import { Metadata } from 'next';
 import { unstable_noStore } from 'next/cache';
 import { Suspense } from 'react'
 
@@ -13,6 +14,10 @@ async function getMeals() {
   let docs = await Meal.find({})
   return docs.map(doc => doc.toJSON())
 }
+
+export const metadata: Metadata = {
+  title: "Orders"
+};
 
 export default async function AdminOrderListPage() {
 

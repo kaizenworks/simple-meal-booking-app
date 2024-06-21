@@ -3,8 +3,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-	title: "Add User | Simple Meal Ordering App",
-	description: "Simple Meal Ordering App Demo by Kaizenworks",
+	title: "Add User",
 };
 
 export default async function AddUserPage() {

@@ -5,8 +5,7 @@ import { Metadata } from 'next'
 import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
-	title: "Edit Meal | Simple Meal Ordering App",
-	description: "Simple Meal Ordering App Demo by Kaizenworks",
+	title: "Edit Meal",
 };
 
 async function getMeal(id:string): Promise<IMeal | null> {

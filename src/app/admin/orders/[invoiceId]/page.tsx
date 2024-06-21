@@ -8,11 +8,6 @@ import { Metadata } from 'next'
 import { unstable_noStore } from 'next/cache';
 import { redirect } from 'next/navigation';
 
-export const metadata: Metadata = {
-	title: "Edit Order | Simple Meal Ordering App",
-	description: "Simple Meal Ordering App Demo by Kaizenworks",
-};
-
 async function getOrder(invoiceId:string): Promise<IOrder | null> {
   await db.connect();
   let order = await Order.findOne({invoiceId});
@@ -25,6 +20,10 @@ async function getMeals() {
   let docs = await Meal.find({})
   return docs.map(doc => doc.toJSON())
 }
+
+export const metadata: Metadata = {
+  title: "Edit Order"
+};
 
 
 export default async function EditMealPage({ params }: { params: { invoiceId: string } }) {

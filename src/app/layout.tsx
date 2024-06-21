@@ -7,7 +7,10 @@ import Providers from "./providers";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Simple Meal Ordering App",
+  title: {
+    template: '%s | Meal Ordering App',
+    default: 'Simple Meal Ordering App',
+  },
   description: "Simple Meal Ordering App Demo by Kaizenworks",
 };
 

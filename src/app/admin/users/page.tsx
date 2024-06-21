@@ -7,8 +7,7 @@ import Link from 'next/link'
 import { Suspense } from 'react'
 
 export const metadata: Metadata = {
-  title: "Users | Simple Meal Ordering App",
-  description: "Simple Meal Ordering App Demo by Kaizenworks",
+  title: "Users",
 };
 
 export default async function AdminUsersListPage() {
